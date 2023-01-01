@@ -40,3 +40,8 @@ chmod +x dimorf.py
 ```
 
 ## References
+[Introduction to Crypto](http://www.inf.ufsc.br/~bosco.sobral/ensino/ine5630/material-cripto-seg/Introducao-Criptografia.pdf)
+[Symmetric Encryption](https://github.com/brunocampos01/seguranca-de-redes)
+[OS - Python Module](https://docs.python.org/3/library/os.html)
+[Understanding how ransomwares working](https://www.mcafee.com/enterprise/en-us/assets/white-papers/wp-understanding-ransomware-strategies-defeat.pdf)
+
