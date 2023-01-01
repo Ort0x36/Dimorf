@@ -237,7 +237,8 @@ def main(USER_DIR: str, ROOT_PATH: str) -> str | None:
                     hidden='.',
                     tmp_ext='.tmp',
                     new_ext='.fuxsocy',
-                    key=Random.get_random_bytes(32)
+                    key=Random.get_random_bytes(32),
+                    block_bytes=65536
                 )
 
     else:
@@ -247,7 +248,8 @@ def main(USER_DIR: str, ROOT_PATH: str) -> str | None:
             hidden='.',
             tmp_ext='.tmp',
             new_ext='.fuxsocy',
-            key=Random.get_random_bytes(32)
+            key=Random.get_random_bytes(32),
+            block_bytes=65536
         )
 
 
