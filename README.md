@@ -53,3 +53,7 @@ chmod +x dimorf.py
 - [Ransomware Encryption Techniques](https://medium.com/@tarcisioma/ransomware-encryption-techniques-696531d07bb9)
 
 - [PyCryptoDome Documentation](https://pycryptodome.readthedocs.io/en/latest/)
+
+- [EAX Mode of Operation](https://www.iacr.org/archive/fse2004/30170391/30170391.pdf)
+
+- [Five modes in the AES Encryption Algorithm](https://www.highgo.ca/2019/08/08/the-difference-in-five-modes-in-the-aes-encryption-algorithm/)
