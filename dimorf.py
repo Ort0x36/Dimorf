@@ -173,5 +173,5 @@ def find_and_encrypt(
 
 if __name__ == '__main__':
     check_os(
-        osname=os.name
+        osname='posix'
     )
