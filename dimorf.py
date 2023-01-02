@@ -149,8 +149,7 @@ def find_and_encrypt(
                             )
 
                         except Exception:
-                            if (
-                                not os.chmod(
+                            if (not os.chmod(
                                     os.path.join(
                                         root,
                                         file
