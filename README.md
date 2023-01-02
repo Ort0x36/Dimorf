@@ -50,3 +50,4 @@ chmod +x dimorf.py
 
 - [Understanding how ransomwares working](https://www.mcafee.com/enterprise/en-us/assets/white-papers/wp-understanding-ransomware-strategies-defeat.pdf)
 
+- [Ransomware Encryption Techniques](https://medium.com/@tarcisioma/ransomware-encryption-techniques-696531d07bb9)
