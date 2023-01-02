@@ -13,10 +13,11 @@ from Crypto.Cipher import AES
 from Crypto import Random
 
 
-USER_DIR = os.getenv('HOME')
-
-
 def check_os(osname: str) -> str | None:
+    USER_DIR = os.getenv(
+        'HOME'
+    )
+    
     is_linux = [
         prop for prop in os.uname() if (
             (prop == "Linux")
