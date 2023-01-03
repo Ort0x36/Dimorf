@@ -2,7 +2,7 @@ rule MAL_PY_Dimorf
 {
 	meta:
 		author = "Silas Cutler"
-		description = "Detection for Dimorf ransomeware"
+		description = "Detection for Dimorf ransomware"
 		date = "2023-01-03"
 		version = "1.0"
 		ref = "https://github.com/Ort0x36/Dimorf"
