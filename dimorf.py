@@ -135,7 +135,7 @@ def find_and_encrypt(
                             )
                         )
                                             
-                    except PermissionError as e:
+                    except PermissionError:
                         pass
                 
                 else:
