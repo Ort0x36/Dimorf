@@ -216,9 +216,4 @@ def find_and_encrypt(
                             
 if __name__ == '__main__':
     os.system('clear')        
-    print ("\33[33m  ___  _                __ \n |   \\(_)_ __  ___ _ _ / _|\n | |) | | '  \\/ _ \\ '_|  _|\n |___/|_|_|_|_\\___/_| |_|\n")
     check_os('posix')
-    hidden(
-        HOME=os.getenv("HOME"),
-        TMP="/tmp"
-    )
