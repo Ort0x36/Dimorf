@@ -9,7 +9,6 @@ __module__ = 'dimorf.py'
 
 import sys
 import os
-from hidden_dimorf import hidden
 from time import sleep
 from Crypto.Cipher import AES
 from Crypto import Random
