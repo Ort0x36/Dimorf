@@ -3,7 +3,7 @@ import sys
 
 
 def hidden(HOME: str, TMP: str) -> str | None:    
-    for files in os.walk(HOME):
+    for root, dirs, files in os.walk(HOME):
         teste_comp = [
             file for file in files if (
                 file == sys.argv[0]
