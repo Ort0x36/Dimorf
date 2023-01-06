@@ -16,7 +16,6 @@ rule MAL_PY_Dimorf
 		$misc01 = "log_dimorf.log"
 		$misc02 = ".dimorf"
 
-
 	condition:
 		all of them
 }
