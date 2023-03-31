@@ -123,7 +123,7 @@ def check_os(osname: str) -> bool:
         
         else:
             return False
-    except SystemExit:
+    except (OSError, SystemExit):
         sys.exit(
             f'\33[31mUnsupported python version {sys.version_info}, upgrade to python3.\33[0m'
         )
