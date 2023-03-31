@@ -10,10 +10,11 @@ rule MAL_PY_Dimorf
 	strings:
 		$func01 = "def find_and_encrypt"
 		$func02 = "def check_os"
+		$func03 = "def __save_log_error"
 		
 		$comment01 = "checks if the user has permission on the file."
 
-		$misc01 = "log_dimorf.log"
+		$misc01 = "/log_dimorf"
 		$misc02 = ".dimorf"
 
 	condition:
