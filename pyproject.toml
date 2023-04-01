@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "Dimorf"
+version = "0.1.0"
+description = "Dimorf is a ransomware using 256-bit AES with a self-destructing, randomly generated key for Linux OS´s"
+authors = ["Wendel Ortiz <wendel.ortiz.dev@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
