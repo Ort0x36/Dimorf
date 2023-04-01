@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# pylint: skip-file
-
-
-__author__ = 'Wendel Ortiz -> aKa Ort0x36'
-__maintainer__ = 'Wendel Ortiz'
-__credits__ = ['Contributors']
-__module__ = 'dimorf.py'
 
 
 import sys
@@ -17,6 +10,12 @@ from psutil import process_iter
 from time import sleep
 from Crypto.Cipher import AES
 from Crypto import Random
+
+
+__author__ = 'Wendel Ortiz -> aKa Ort0x36'
+__maintainer__ = 'Wendel Ortiz'
+__credits__ = ['Contributors']
+__module__ = 'dimorf.py'
 
 
 def __save_log_error(dir_log: str, logs: list) -> str:
