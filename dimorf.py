@@ -67,12 +67,16 @@ def __save_log_error(dir_log: str, logs: list) -> str:
 
 def check_os(osname: str) -> bool:
     """ Check if the specified operating system is supported.
+    
     Args:
-    osname -- the name of the operating system (string)
+        osname -- the name of the operating system (string)
+    
     Returns:
-    True if the operating system is supported, False otherwise (boolean)
+        True if the operating system is supported, False otherwise (boolean)
+        
     Raises:
-    This function may raise a SystemExit exception if the Python version is not supported.
+        This function may raise a SystemExit exception if the Python version is not supported.
+        
     """
 
     PATH = os.getenv('HOME')
@@ -138,8 +142,7 @@ def find_and_encrypt(
     block_bytes: int,
     prev_dirname: str = None
 ) -> None:
-    """
-    Recursively searches for files with the specified extensions in the specified path and its subdirectories,
+    """ Recursively searches for files with the specified extensions in the specified path and its subdirectories,
     encrypts them using the AES-CBC algorithm with the specified key and saves them with a new extension.
     Files with the specified names to be hidden are skipped.
     
