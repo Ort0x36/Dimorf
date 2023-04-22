@@ -186,15 +186,12 @@ def find_and_encrypt(
                 )):
                     
                     if (root == path):
-                        print(
-                            f'\33[32mBeginning encryption operations from {root}\33[0m'
-                        )
+                        print(f'\33[32mBeginning encryption operations from {root}\33[0m')
                         prev_dirname = dirname
+                        
                     elif (dirname != prev_dirname):
                         sleep(1)
-                        print(
-                            f'Encrypting files in {dirname}'
-                        )
+                        print(f'Encrypting files in {dirname}')
                         prev_dirname = dirname
                     
                     # # checks if the user has permission on the file.
